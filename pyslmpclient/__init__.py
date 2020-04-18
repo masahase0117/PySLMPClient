@@ -843,3 +843,70 @@ class SLMPClient(object):
                     with self.__lock:
                         del self.__recv_queue[k]
                     return buf[4:]
+
+    def memory_read(self, addr, length, timeout=0):
+        """自局のメモリを読み取る
+
+        :param int addr: 先頭アドレス
+        :param int length: ワード長
+        :param int timeout: タイムアウト、250msec単位
+        :return: 読みだしたデータ
+        :rtype: List[bytes]
+        """
+        cmd = const.SLMPCommand.Memory_Read
+        sub_cmd = 0x00
+        assert 0 < length <= 480, length
+        if self.protocol[0]:  # Binary
+            buf = struct.pack("<IH", addr, length)
+        else:
+            buf = b"%08X%04X" % (addr, length)
+        seq = self.__cmd_format(timeout, cmd, sub_cmd, buf)
+        try:
+            ret = self.__recv_loop(seq, timeout)
+        except TimeoutError as e:
+            raise TimeoutError() from e
+        buf = ret[5]
+        ret = list()
+        if isinstance(buf, str):
+            buf = list(buf)
+            buf.reverse()
+            while buf:
+                d1 = buf.pop()
+                d2 = buf.pop()
+                d3 = buf.pop()
+                d4 = buf.pop()
+                ret.append(
+                    bytes([int(d3 + d4, base=16), int(d1 + d2, base=16)])
+                )
+        else:
+            buf = list(buf)
+            buf.reverse()
+            while buf:
+                d1 = buf.pop()
+                d2 = buf.pop()
+                ret.append(bytes([d1, d2]))
+        return ret
+
+    def memory_write(self, addr, data, timeout=0):
+        """自局のメモリに書き込む
+
+        :param int addr: 先頭アドレス
+        :param data: 書き込みデータ
+        :type data: List[bytes]
+        :param int timeout: タイムアウト、250msec単位
+        :return: None
+        :rtype: None
+        """
+        cmd = const.SLMPCommand.Memory_Write
+        sub_cmd = 0x00
+        assert 0 < len(data) <= 480, len(data)
+        if self.protocol[0]:  # Binary
+            buf = struct.pack("<IH", addr, len(data))
+            for v in data:
+                buf += v
+        else:
+            buf = b"%08X%04X" % (addr, len(data))
+            for v in data:
+                buf += b"%02X%02X" %(v[1], v[0])
+        self.__cmd_format(timeout, cmd, sub_cmd, buf)
+

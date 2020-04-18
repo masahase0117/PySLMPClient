@@ -1005,5 +1005,63 @@ class SLMPClientOtherTestCase(SLMPClientTestCase):
                         )
 
 
+class SLMPClientMemoryTestCase(SLMPClientTestCase):
+    def test_read(self):
+        for f_type in ("a", "b"):
+            with self.subTest(ftype=f_type):
+                for i in (3, 4):
+                    with self.subTest(i=i):
+                        socket_instance_mock = mock.NonCallableMagicMock(
+                            spec=_socket.socket
+                        )
+                        if f_type == "a":
+                            data_body = b"050009C100C8"
+                        else:
+                            data_body = b"\x00\x05\xc1\x09\xc8\x00"
+                        a = self.prepare(
+                            i, f_type, data_body, socket_instance_mock
+                        )
+                        a.target = self.target
+                        with a:
+                            ret = a.memory_read(0x78, 3, timeout=6)
+                        self.assertListEqual(
+                            ret, [b"\x00\x05", b"\xc1\x09", b"\xc8\x00"]
+                        )
+                        data_body = (
+                            b"06130000000000780003"
+                            if f_type == "a"
+                            else b"\x13\x06\x00\x00\x78\x00\x00\x00\x03\x00"
+                        )
+                        self.check_send_data(
+                            f_type, i, data_body, socket_instance_mock
+                        )
+
+    def test_write(self):
+        for f_type in ("a", "b"):
+            with self.subTest(ftype=f_type):
+                for i in (3, 4):
+                    with self.subTest(i=i):
+                        socket_instance_mock = mock.NonCallableMagicMock(
+                            spec=_socket.socket
+                        )
+                        a = self.prepare_no_res(
+                            f_type, i, socket_instance_mock
+                        )
+                        a.target = self.target
+                        with a:
+                            a.memory_write(
+                                0x2680, [b"\x00\x20", b"\x00\x00"], timeout=6
+                            )
+                        data_body = (
+                            b"1613000000002680000220000000"
+                            if f_type == "a"
+                            else b"\x13\x16\x00\x00\x80\x26\x00\x00\x02\x00"
+                            b"\x00\x20\x00\x00"
+                        )
+                        self.check_send_data(
+                            f_type, i, data_body, socket_instance_mock
+                        )
+
+
 if __name__ == "__main__":
     unittest.main()
