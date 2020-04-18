@@ -863,6 +863,8 @@ class SLMPClient(object):
         cmd = const.SLMPCommand.Memory_Read
         sub_cmd = 0x00
         assert 0 < length <= 480, length
+        assert self.target.network == 0, self.target
+        assert self.target.node == 0xFF, self.target
         if self.protocol[0]:  # Binary
             buf = struct.pack("<IH", addr, length)
         else:
@@ -907,6 +909,8 @@ class SLMPClient(object):
         cmd = const.SLMPCommand.Memory_Write
         sub_cmd = 0x00
         assert 0 < len(data) <= 480, len(data)
+        assert self.target.network == 0, self.target
+        assert self.target.node == 0xFF, self.target
         if self.protocol[0]:  # Binary
             buf = struct.pack("<IH", addr, len(data))
             for v in data:
