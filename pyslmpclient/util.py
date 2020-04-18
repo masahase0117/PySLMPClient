@@ -101,7 +101,7 @@ def pack_bits(data):
 
     # 最後サイズが足りないところを0埋め
     byte_array_bin = np.zeros(size8, "u1")
-    byte_array_bin[:data.size] = data
+    byte_array_bin[: data.size] = data
 
     # 8bitごとにデータ順を反転させるために2次元配列に変換
     byte_array2d_bin = byte_array_bin.reshape((size8 // 8, 8))
@@ -130,7 +130,9 @@ def device2ascii(device_type, address):
 
 
 class Target(object):
-    def __init__(self, network_num=0, node_num=0, dst_proc_num=0, m_drop_num=0):
+    def __init__(
+        self, network_num=0, node_num=0, dst_proc_num=0, m_drop_num=0
+    ):
         """SLMPで通信する対象
 
         :param int network_num: ネットワーク番号
@@ -190,6 +192,14 @@ class Target(object):
             self.__m_drop = value
         else:
             raise ValueError("0 <= value <= 0xFF")
+
+    def __str__(self):
+        return "SLMPTarget(%d,%d,%d,%d)" % (
+            self.network,
+            self.node,
+            self.dst_proc,
+            self.m_drop,
+        )
 
 
 def make_binary_frame(seq, target, timeout, cmd, sub_cmd, data, ver):
