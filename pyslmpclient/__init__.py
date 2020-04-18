@@ -918,6 +918,5 @@ class SLMPClient(object):
         else:
             buf = b"%08X%04X" % (addr, len(data))
             for v in data:
-                buf += b"%02X%02X" %(v[1], v[0])
+                buf += b"%02X%02X" % (v[1], v[0])
         self.__cmd_format(timeout, cmd, sub_cmd, buf)
-
