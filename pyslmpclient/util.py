@@ -7,6 +7,7 @@ import numpy as np
 
 from pyslmpclient.const import D_ADDR_16
 from pyslmpclient.const import SLMPCommand
+from pyslmpclient.const import EndCode
 
 
 def encode_bcd(data):
@@ -318,3 +319,12 @@ def extracts_word_dword_data(buf, split_pos):
         d4 = dword_buf.pop()
         dword_data.append(bytes([d1, d2, d3, d4]))
     return dword_data, word_data
+
+
+class SLMPError(Exception):
+    pass
+
+
+class SLMPCommunicationError(SLMPError):
+    def __init__(self, cause: EndCode):
+        self.cause = cause

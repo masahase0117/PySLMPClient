@@ -257,8 +257,9 @@ class SLMPClient(object):
         data = self.__recv_queue[seq]
         with self.__lock:
             del self.__recv_queue[seq]
-        if data[4] != 0:
-            raise RuntimeError(data)
+        end_code = util.EndCode(data[4])
+        if end_code != util.EndCode.Success:
+            raise util.SLMPCommunicationError(end_code)
         return data
 
     def __read_devices(self, device_code, start_num, count, timeout, sub_cmd):
@@ -835,13 +836,19 @@ class SLMPClient(object):
             buf = self.__recv_queue[k][5]
             if isinstance(buf, str):  # ASCII
                 if buf[:8] == "21010000":
+                    end_code = util.EndCode(self.__recv_queue[k][4])
                     with self.__lock:
                         del self.__recv_queue[k]
+                    if end_code != util.EndCode.Success:
+                        raise util.SLMPCommunicationError(end_code)
                     return b"%s" % buf[8:]
             else:
                 if buf[:4] == b"\x01\x21\x00\x00":
+                    end_code = util.EndCode(self.__recv_queue[k][4])
                     with self.__lock:
                         del self.__recv_queue[k]
+                    if end_code != util.EndCode.Success:
+                        raise util.SLMPCommunicationError(end_code)
                     return buf[4:]
 
     def memory_read(self, addr, length, timeout=0):
