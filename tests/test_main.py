@@ -6,7 +6,7 @@ import unittest
 from unittest import mock
 
 
-from pyslmpclient.const import DeviceCode2
+from pyslmpclient.const import DeviceCode
 from pyslmpclient.const import TypeCode
 from pyslmpclient import SLMPClient
 from pyslmpclient.util import Target
@@ -101,7 +101,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             b = a.read_bit_devices(
-                                DeviceCode2.M,
+                                DeviceCode.M,
                                 start_num=100,
                                 count=8,
                                 timeout=6,
@@ -147,7 +147,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             b = a.read_word_devices(
-                                DeviceCode2.M,
+                                DeviceCode.M,
                                 start_num=100,
                                 count=2,
                                 timeout=6,
@@ -183,7 +183,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             b = a.read_word_devices(
-                                DeviceCode2.TN,
+                                DeviceCode.TN,
                                 start_num=100,
                                 count=3,
                                 timeout=6,
@@ -215,7 +215,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             a.write_bit_devices(
-                                DeviceCode2.M,
+                                DeviceCode.M,
                                 100,
                                 [1, 1, 0, 0, 1, 1, 0, 0],
                                 6,
@@ -245,7 +245,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             a.write_word_devices(
-                                DeviceCode2.M,
+                                DeviceCode.M,
                                 start_num=100,
                                 data=[0x2347, 0xAB96],
                                 timeout=6,
@@ -275,7 +275,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         a.target = self.target
                         with a:
                             a.write_word_devices(
-                                DeviceCode2.D,
+                                DeviceCode.D,
                                 start_num=100,
                                 data=[0x1995, 0x1202, 0x1130],
                                 timeout=6,
@@ -316,15 +316,15 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         with a:
                             b = a.read_random_devices(
                                 [
-                                    (DeviceCode2.D, 0),
-                                    (DeviceCode2.TN, 0),
-                                    (DeviceCode2.M, 100),
-                                    (DeviceCode2.X, 0x20),
+                                    (DeviceCode.D, 0),
+                                    (DeviceCode.TN, 0),
+                                    (DeviceCode.M, 100),
+                                    (DeviceCode.X, 0x20),
                                 ],
                                 [
-                                    (DeviceCode2.D, 1500),
-                                    (DeviceCode2.Y, 0x160),
-                                    (DeviceCode2.M, 1111),
+                                    (DeviceCode.D, 1500),
+                                    (DeviceCode.Y, 0x160),
+                                    (DeviceCode.M, 1111),
                                 ],
                                 timeout=6,
                             )
@@ -375,8 +375,8 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         with a:
                             a.write_random_bit_devices(
                                 [
-                                    (DeviceCode2.M, 50, False),
-                                    (DeviceCode2.Y, 0x2F, True),
+                                    (DeviceCode.M, 50, False),
+                                    (DeviceCode.Y, 0x2F, True),
                                 ],
                                 timeout=6,
                             )
@@ -406,24 +406,24 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         with a:
                             a.write_random_word_devices(
                                 [
-                                    (DeviceCode2.D, 0, b"\x50\x05"),
-                                    (DeviceCode2.D, 1, b"\x75\x05"),
-                                    (DeviceCode2.M, 100, b"\x40\x05"),
-                                    (DeviceCode2.X, 0x20, b"\x83\x05"),
+                                    (DeviceCode.D, 0, b"\x50\x05"),
+                                    (DeviceCode.D, 1, b"\x75\x05"),
+                                    (DeviceCode.M, 100, b"\x40\x05"),
+                                    (DeviceCode.X, 0x20, b"\x83\x05"),
                                 ],
                                 [
                                     (
-                                        DeviceCode2.D,
+                                        DeviceCode.D,
                                         1500,
                                         b"\x02\x12\x39\x04",
                                     ),
                                     (
-                                        DeviceCode2.Y,
+                                        DeviceCode.Y,
                                         0x160,
                                         b"\x07\x26\x75\x23",
                                     ),
                                     (
-                                        DeviceCode2.M,
+                                        DeviceCode.M,
                                         1111,
                                         b"\x75\x04\x25\x04",
                                     ),
@@ -484,15 +484,15 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         with a:
                             a.entry_monitor_device(
                                 [
-                                    (DeviceCode2.D, 0),
-                                    (DeviceCode2.TN, 0),
-                                    (DeviceCode2.M, 100),
-                                    (DeviceCode2.X, 0x20),
+                                    (DeviceCode.D, 0),
+                                    (DeviceCode.TN, 0),
+                                    (DeviceCode.M, 100),
+                                    (DeviceCode.X, 0x20),
                                 ],
                                 [
-                                    (DeviceCode2.D, 1500),
-                                    (DeviceCode2.Y, 0x160),
-                                    (DeviceCode2.M, 1111),
+                                    (DeviceCode.D, 1500),
+                                    (DeviceCode.Y, 0x160),
+                                    (DeviceCode.M, 1111),
                                 ],
                                 timeout=6,
                             )
@@ -560,13 +560,13 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                         with a:
                             b = a.read_block(
                                 [
-                                    (DeviceCode2.D, 0, 4),
-                                    (DeviceCode2.W, 0x100, 8),
+                                    (DeviceCode.D, 0, 4),
+                                    (DeviceCode.W, 0x100, 8),
                                 ],
                                 [
-                                    (DeviceCode2.M, 0, 2),
-                                    (DeviceCode2.M, 128, 2),
-                                    (DeviceCode2.B, 0x100, 3),
+                                    (DeviceCode.M, 0, 2),
+                                    (DeviceCode.M, 128, 2),
+                                    (DeviceCode.B, 0x100, 3),
                                 ],
                                 timeout=6,
                             )
@@ -760,13 +760,13 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                             a.write_block(
                                 [
                                     (
-                                        DeviceCode2.D,
+                                        DeviceCode.D,
                                         0,
                                         4,
                                         [0x8, 0x00, 0x00, 0x2800],
                                     ),
                                     (
-                                        DeviceCode2.W,
+                                        DeviceCode.W,
                                         0x100,
                                         8,
                                         [
@@ -783,7 +783,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                                 ],
                                 [
                                     (
-                                        DeviceCode2.M,
+                                        DeviceCode.M,
                                         0,
                                         2,
                                         [
@@ -822,7 +822,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                                         ],
                                     ),
                                     (
-                                        DeviceCode2.M,
+                                        DeviceCode.M,
                                         128,
                                         2,
                                         [
@@ -861,7 +861,7 @@ class SLMPClientDeviceTestCase(SLMPClientTestCase):
                                         ],
                                     ),
                                     (
-                                        DeviceCode2.B,
+                                        DeviceCode.B,
                                         0x100,
                                         3,
                                         [

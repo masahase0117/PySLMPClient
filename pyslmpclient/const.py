@@ -27,13 +27,27 @@ class SLMPCommand(enum.Enum):
     RemoteControl_RemoteLatchClear = 0x1005
     RemoteControl_RemoteReset = 0x1006
     RemoteControl_ReadTypeName = 0x0101
+    RemoteControl_NodeIndication = 0x3070
+    Drive_ReadDiskState = 0x0205
+    Drive_Defrag = 0x1207
     RemotePassword_Lock = 0x1631
     RemotePassword_Unlock = 0x1630
+    File_ReadFileInfo = 0x0201
+    File_ReadFileInfoWithTitle = 0x0202
+    File_ReadFileNoInfo = 0x0204
+    File_ChangeFileInfo = 0x1204
+    File_Search = 0x0203
+    File_Read = 0x0206
+    File_Write = 0x1203
+    File_FileLock = 0x0808
+    File_Copy = 0x1206
+    File_Delete = 0x1205
     File_ReadDir = 0x1810
     File_SearchDir = 0x1811
-    File_NewFile = 0x1820
+    File_NewFileA = 0x1202
+    File_NewFileB = 0x1820
     File_DeleteFile = 0x1822
-    File_CopyFIle = 0x1824
+    File_CopyFile = 0x1824
     File_ChangeFileState = 0x1825
     File_ChangeFileDate = 0x1826
     File_OpenFile = 0x1827
@@ -41,11 +55,69 @@ class SLMPCommand(enum.Enum):
     File_WriteFile = 0x1829
     File_CloseFile = 0x182A
     SelfTest = 0x0619
-    ClearError = 0x1617
+    ClearError_Code = 0x1617
+    ClearError_History = 0x1619
     OnDemand = 0x2101
+    DataCollection_Auth = 0x4000
+    DataCollection_KeepAlive = 0x4001
+    DataCollection_GetData = 0x4002
+    DataCollection_Distribute = 0x4003
+    NodeConnection_NodeSearch = 0x0E30
+    NodeConnection_IPAddressSet = 0x0E31
+    ParameterSetting_DeviceInfoCompare = 0x0E32
+    ParameterSetting_ParameterGet = 0x0E33
+    ParameterSetting_ParameterUpdate = 0x0E34
+    ParameterSetting_ParameterSetStart = 0x0E35
+    ParameterSetting_ParameterSetEnd = 0x0E36
+    ParameterSetting_ParameterSetCancel = 0x0E3A
+    ParameterSetting_DeviceIdentificationInfoGet = 0x0E28
+    ParameterSetting_CommunicationSpeed = 0x3072
+    NodeMonitoring_StatusRead = 0xE44
+    NodeMonitoring_StatusRead2 = 0xE53
+    NodeMonitoring_ConnectionSettingGet = 0xE45
+    NodeMonitoring_DataMonitoring = 0x0E29
+    Other_CAN = 0x4020
+    Other_IOLInk = 0x5000
+    Other_ModbusTCP = 0x5001
+    Other_ModbusRTU = 0x5002
+    CCLinkIEFieldDiagnostics_SelectNodeInfoGet = 0x3119
+    CCLinkIEFieldDiagnostics_CommunicationTest = 0x3040
+    CCLinkIEFieldDiagnostics_CableTest = 0x3050
+    CCLinkIETSNNetworkManagement_NetworkConfig = 0x0E90
+    CCLinkIETSNNetworkManagement_MasterConfig = 0x0E91
+    CCLinkIETSNNetworkManagement_SlaveConfig = 0x0E92
+    CCLinkIETSNNetworkManagement_CyclicConfig = 0x0E93
+    CCLinkIETSNNetworkManagement_Notification = 0x0E94
+    LinkDeviceParameter_LinkDevicePrmWrite = 0x320A
+    LinkDeviceParameter_LinkDevicePrmWriteCheckReq = 0x320B
+    LinkDeviceParameter_LinkDevicePrmWriteCheckResp = 0x320C
+    EventHistory_GetEventNum = 0x3060
+    EventHistory_GetEventHistory = 0x3061
+    EventHistory_ClearEventHistory = 0x161A
+    EventHistory_ClockOffsetDataSend = 0x3062
+    BackupRestore_GetCommunicationSet = 0x0EB0
+    BackupRestore_GetStationSubIDList = 0x0EB1
+    BackupRestore_GetDeviceInfo = 0x0EB2
+    BackupRestore_StartBackup = 0x0EB3
+    BackupRestore_EndBackup = 0x0EB4
+    BackupRestore_RequestBackup = 0x0EB5
+    BackupRestore_GetBackupPrm = 0x0EB6
+    BackupRestore_CheckRestore = 0x0EB7
+    BackupRestore_StartRestore = 0x0EB8
+    BackupRestore_EndRestore = 0x0EB9
+    BackupRestore_SetBackupPrm = 0x0EBA
+    SlaveStationPrmRestore_CheckPrmDelivery = 0x0EBE
+    StartStopCyclic_StopOwnStationCyclic = 0x3206
+    StartStopCyclic_StartOwnStationCyclic = 0x3207
+    StartStopCyclic_StopOtherStationCyclic = 0x3208
+    StartStopCyclic_StartOtherStationCyclic = 0x3209
+    ReservedStation_RsvStationConfigTemporaryRelease = 0x320D
+    ReservedStation_RsvStationConfig = 0x320E
+    WatchdogCounter_SetWatchdogCounterInfo = 0x3210
+    WatchdogCounter_WatchdogCounterOffsetConfig = 0x3211
 
 
-class DeviceCode2(enum.Enum):
+class DeviceCode(enum.Enum):
     SM = 0x91
     SD = 0xA9
     X = 0x9C
@@ -60,9 +132,15 @@ class DeviceCode2(enum.Enum):
     TS = 0xC1
     TC = 0xC0
     TN = 0xC2
+    LTS = 0x51
+    LTC = 0x50
+    LTN = 0x52
     SS = 0xC7
     SC = 0xC6
     SN = 0xC8
+    LSTS = 0x59
+    LSTC = 0x58
+    LSTN = 0x5A
     CS = 0xC4
     CC = 0xC3
     CN = 0xC5
@@ -71,23 +149,44 @@ class DeviceCode2(enum.Enum):
     DX = 0xA2
     DY = 0xA3
     Z = 0xCC
+    LZ = 0x62
     R = 0xAF
     ZR = 0xB0
+    RD = 0x2C
+    LCS = 0x55
+    LCC = 0x54
+    LCN = 0x56
 
 
 # アドレス表現が16進数のデバイスの一覧
 D_ADDR_16 = (
-    DeviceCode2.X,
-    DeviceCode2.Y,
-    DeviceCode2.B,
-    DeviceCode2.W,
-    DeviceCode2.SB,
-    DeviceCode2.SW,
-    DeviceCode2.DX,
-    DeviceCode2.DY,
-    DeviceCode2.ZR,
-    DeviceCode2.W,
+    DeviceCode.X,
+    DeviceCode.Y,
+    DeviceCode.B,
+    DeviceCode.W,
+    DeviceCode.SB,
+    DeviceCode.SW,
+    DeviceCode.DX,
+    DeviceCode.DY,
+    DeviceCode.ZR,
+    DeviceCode.W,
 )
+# 4バイトアドレスでしかアクセスできないデバイスの一覧
+D_ADDR_4BYTE = (
+    DeviceCode.LTS,
+    DeviceCode.LTC,
+    DeviceCode.LTN,
+    DeviceCode.LSTS,
+    DeviceCode.LSTC,
+    DeviceCode.LSTN,
+    DeviceCode.LCS,
+    DeviceCode.LCC,
+    DeviceCode.LCN,
+    DeviceCode.LZ,
+    DeviceCode.RD,
+)
+# 4バイトアドレスと2バイトアドレスで名前の違うデバイス
+D_STRANGE_NAME = {DeviceCode.SS, DeviceCode.SC, DeviceCode.SN}
 
 
 class TypeCode(enum.Enum):
@@ -159,3 +258,81 @@ class TypeCode(enum.Enum):
     RJ72GF15_T2_D1 = 0x4861
     RJ72GF15_T2_D2 = 0x4862
     NZ2GF_ETB = 0x0642
+
+
+class PDU(enum.Enum):
+    rdReqST = 1
+    wrReqST = 2
+    rdResST = 3
+    wrResST = 4
+    rdErrST = 5
+    wrErrST = 6
+    odReqST = 7
+    rdReqMT = 8
+    wrReqMT = 9
+    rdResMT = 10
+    wrResMT = 11
+    rdErrMT = 12
+    wrErrMT = 13
+    odReqMT = 14
+    reqEMT = 15
+    resEMT = 16
+    pushEMT = 17
+    reqLMT = 18
+    resLMT = 19
+    errLMT = 20
+
+
+ST_PDU = (
+    PDU.rdReqST,
+    PDU.wrReqST,
+    PDU.rdResST,
+    PDU.wrResST,
+    PDU.rdErrST,
+    PDU.wrErrST,
+    PDU.odReqST,
+)
+MT_PDU = (
+    PDU.rdReqMT,
+    PDU.wrReqMT,
+    PDU.rdResMT,
+    PDU.wrResMT,
+    PDU.rdErrMT,
+    PDU.wrErrMT,
+    PDU.odReqMT,
+)
+EMT_PDU = (PDU.reqEMT, PDU.resEMT, PDU.pushEMT)
+LMT_PDU = (PDU.reqLMT, PDU.resLMT, PDU.errLMT)
+
+
+class EndCode(enum.Enum):
+    Success = 0x00
+    WrongCommand = 0xC059
+    WrongFormat = 0xC05C
+    WrongLength = 0xC061
+    Busy = 0xCEE0
+    ExceedReqLength = 0xCEE1
+    ExceedRespLength = 0xCEE2
+    ServerNotFound = 0xCF10
+    WrongConfigItem = 0xCF20
+    PrmIDNotFound = 0xCF30
+    NotStartExclusiveWrite = 0xCF31
+    RelayFailure = 0xCF70
+    TimeoutError = 0xCF71
+    CANAppNotPermittedRead = 0xCCC7
+    CANAppWriteOnly = 0xCCC8
+    CANAppReadOnly = 0xCCC9
+    CANAppUndefinedObjectAccess = 0xCCCA
+    CANAppNotPermittedPDOMapping = 0xCCCB
+    CANAppExceedPDOMapping = 0xCCCC
+    CANAppNotExistSubIndex = 0xCCD3
+    CANAppWrongParameter = 0xCCD4
+    CANAppMoreOverParameterRange = 0xCCD5
+    CANAppLessOverParameterRange = 0xCCD6
+    CANAppTransOrStoreError = 0xCCDA
+    CANAppOtherError = 0xCCFF
+    OtherNetworkError = 0xCF00
+    DataFragmentShortage = 0xCF40
+    DataFragmentDup = 0xCF41
+    DataFragmentLost = 0xCF43
+    DataFragmentNotSupport = 0xCF44

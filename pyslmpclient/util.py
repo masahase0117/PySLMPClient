@@ -129,21 +129,21 @@ def device2ascii(device_type, address):
 
 
 class Target(object):
-    def __init__(self, network_num=0, pc_num=0, io_num=0, m_drop_num=0):
+    def __init__(self, network_num=0, node_num=0, dst_proc_num=0, m_drop_num=0):
         """SLMPで通信する対象
 
         :param int network_num: ネットワーク番号
-        :param int pc_num: 要求先局番
-        :param int io_num: 要求先ユニットIO番号
+        :param int node_num: 要求先局番
+        :param int dst_proc_num: 要求先プロセッサ番号
         :param int m_drop_num: 要求先マルチドロップ局番
         """
         assert 0 <= network_num <= 0xFF, network_num
-        assert 0 <= pc_num <= 0xFF, pc_num
-        assert 0 <= io_num <= 0xFFFF, io_num
+        assert 0 <= node_num <= 0xFF, node_num
+        assert 0 <= dst_proc_num <= 0xFFFF, dst_proc_num
         assert 0 <= m_drop_num <= 0xFF, m_drop_num
         self.__network = network_num
-        self.__pc = pc_num
-        self.__io = io_num
+        self.__node = node_num
+        self.__dst_proc = dst_proc_num
         self.__m_drop = m_drop_num
 
     @property
@@ -158,24 +158,24 @@ class Target(object):
             raise ValueError("0 <= value <= 0xFF")
 
     @property
-    def pc(self):
-        return self.__pc
+    def node(self):
+        return self.__node
 
-    @pc.setter
-    def pc(self, value: int):
+    @node.setter
+    def node(self, value: int):
         if isinstance(value, int) and 0 <= value <= 0xFF:
-            self.__pc = value
+            self.__node = value
         else:
             raise ValueError("0 <= value <= 0xFF")
 
     @property
-    def io(self):
-        return self.__io
+    def dst_proc(self):
+        return self.__dst_proc
 
-    @io.setter
-    def io(self, value: int):
+    @dst_proc.setter
+    def dst_proc(self, value: int):
         if isinstance(value, int) and 0 <= value <= 0xFFFF:
-            self.__io = value
+            self.__dst_proc = value
         else:
             raise ValueError("0 <= value <= 0xFFFF")
 
@@ -215,8 +215,8 @@ def make_binary_frame(seq, target, timeout, cmd, sub_cmd, data, ver):
     cmd_text = struct.pack(
         "<BBHBHHHH",
         target.network,
-        target.pc,
-        target.io,
+        target.node,
+        target.dst_proc,
         target.m_drop,
         len(data) + 6,
         timeout,
@@ -258,8 +258,8 @@ def make_ascii_frame(seq, target, timeout, cmd, sub_cmd, data, ver):
 
     cmd_text = b"%02X%02X%04X%02X%04X%04X%04X%04X" % (
         target.network,
-        target.pc,
-        target.io,
+        target.node,
+        target.dst_proc,
         target.m_drop,
         len(data) + 12,
         timeout,

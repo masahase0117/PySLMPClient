@@ -261,21 +261,21 @@ class SLMPClient(object):
             raise RuntimeError(data)
         return data
 
-    def __read_devices(self, device_code2, start_num, count, timeout, sub_cmd):
+    def __read_devices(self, device_code, start_num, count, timeout, sub_cmd):
         cmd = const.SLMPCommand.Device_Read
-        if not isinstance(device_code2, const.DeviceCode2):
-            raise ValueError(device_code2)
+        if not isinstance(device_code, const.DeviceCode):
+            raise ValueError(device_code)
         assert 0 < start_num < 0xFFF, start_num
         assert 0 < count < 3584, count
         if self.protocol[0]:
             cmd_text = struct.pack("<I", start_num)[:-1]
-            cmd_text += struct.pack("<B", device_code2.value)
+            cmd_text += struct.pack("<B", device_code.value)
             cmd_text += struct.pack("<H", count)
         else:
-            cmd_text = b"%s" % device_code2.name.encode("ascii")
+            cmd_text = b"%s" % device_code.name.encode("ascii")
             if len(cmd_text) == 1:
                 cmd_text += b"*"
-            if device_code2 in const.D_ADDR_16:
+            if device_code in const.D_ADDR_16:
                 cmd_text += b"%06X%04d" % (start_num, count)
             else:
                 cmd_text += b"%06d%04d" % (start_num, count)
@@ -283,14 +283,14 @@ class SLMPClient(object):
         try:
             data = self.__recv_loop(seq, timeout)
         except TimeoutError as e:
-            raise TimeoutError(device_code2, start_num, count) from e
+            raise TimeoutError(device_code, start_num, count) from e
         return data
 
-    def read_bit_devices(self, device_code2, start_num, count, timeout=0):
+    def read_bit_devices(self, device_code, start_num, count, timeout=0):
         """デバイスコードで指定したビットデバイスを開始アドレスから指定の個数分だけ読み取る。
 
-        :param device_code2: デバイスコード
-        :type device_code2: const.DeviceCode2
+        :param device_code: デバイスコード
+        :type device_code: const.DeviceCode
         :param int start_num: 開始アドレス
         :param int count: 個数
         :param int timeout: 監視時間, 250msec単位
@@ -298,7 +298,7 @@ class SLMPClient(object):
         :rtype: Tuple[bool]
         """
         data = self.__read_devices(
-            device_code2, start_num, count, timeout, 0x0001
+            device_code, start_num, count, timeout, 0x0001
         )
 
         if isinstance(data[5], str):
@@ -310,11 +310,11 @@ class SLMPClient(object):
         assert len(ret) == count, len(ret)
         return ret
 
-    def read_word_devices(self, device_code2, start_num, count, timeout=0):
+    def read_word_devices(self, device_code, start_num, count, timeout=0):
         """デバイスコードで指定したワードデバイスを開始アドレスから指定の個数分だけ読み取る。
 
-        :param device_code2: デバイスコード
-        :type device_code2: const.DeviceCode2
+        :param device_code: デバイスコード
+        :type device_code: const.DeviceCode
         :param int start_num: 開始アドレス
         :param int count: 個数
         :param int timeout: 監視時間, 250msec単位
@@ -322,7 +322,7 @@ class SLMPClient(object):
         :rtype: Tuple[bytes]
         """
         data = self.__read_devices(
-            device_code2, start_num, count, timeout, 0x0000
+            device_code, start_num, count, timeout, 0x0000
         )
         if isinstance(data[5], str):
             ret = array(
@@ -340,7 +340,7 @@ class SLMPClient(object):
         """デバイス書き込み
 
         :param dc2:
-        :type dc2: const.DeviceCode2
+        :type dc2: const.DeviceCode
         :param int start_num:
         :param data:
         :type data: List[int]
@@ -349,7 +349,7 @@ class SLMPClient(object):
         :return:
         """
         cmd = const.SLMPCommand.Device_Write
-        if not isinstance(dc2, const.DeviceCode2):
+        if not isinstance(dc2, const.DeviceCode):
             raise ValueError(dc2)
         assert 0 < start_num < 0xFFF, start_num
         if self.protocol[0]:  # Binary
@@ -396,7 +396,7 @@ class SLMPClient(object):
         """デバイスコードで指定したビットデバイスを開始アドレスから指定したデータで書き換える。
 
         :param dc2: デバイスコード
-        :type dc2: const.DeviceCode2
+        :type dc2: const.DeviceCode
         :param int start_num: 開始アドレス
         :param data: 書き込むデータ
         :type data: List[int]
@@ -409,7 +409,7 @@ class SLMPClient(object):
         """デバイスコードで指定したワードデバイスを開始アドレスから指定したデータで書き換える。
 
         :param dc2: デバイスコード
-        :type dc2: const.DeviceCode2
+        :type dc2: const.DeviceCode
         :param int start_num: 開始アドレス
         :param data: 書き込むデータ
         :type data: List[int]
@@ -422,9 +422,9 @@ class SLMPClient(object):
         """デバイスリストを要求電文としてフォーマットする
 
         :param word_list: ワードアクセスするデバイスのリスト
-        :type word_list: List[(const.DeviceCode2, int)]
+        :type word_list: List[(const.DeviceCode, int)]
         :param dword_list: ダブルワードアクセスするデバイスのリスト
-        :type dword_list: List[(const.DeviceCode2, int)]
+        :type dword_list: List[(const.DeviceCode, int)]
         :return: 要求電文の形式となったデバイスリスト
         :rtype: bytes
         """
@@ -460,9 +460,9 @@ class SLMPClient(object):
         """指定した連続していないデバイスのデータを読む
 
         :param word_list: ワードアクセスするデバイスのリスト
-        :type word_list: List[(const.DeviceCode2, int)]
+        :type word_list: List[(const.DeviceCode, int)]
         :param dword_list: ダブルワードアクセスするデバイスのリスト
-        :type dword_list: List[(const.DeviceCode2, int)]
+        :type dword_list: List[(const.DeviceCode, int)]
         :param int timeout: タイムアウト、250msec単位
         :return: デバイスに入っていたデータ(ワードアクセス分のリスト,
          ダブルワードアクセス分のリスト)
@@ -503,7 +503,7 @@ class SLMPClient(object):
         """連続していないビットデバイスに書き込む
 
         :param device_list: 書き込むデバイスと値のリスト(デバイス種別、アドレス、値)
-        :type device_list: List[(const.DeviceCode2, int, bool)]
+        :type device_list: List[(const.DeviceCode, int, bool)]
         :param int timeout: タイムアウト、250msec単位
         :return: None
         """
@@ -528,9 +528,9 @@ class SLMPClient(object):
         """連続していないワードデバイスに書き込む
 
         :param word_list: ワード単位でアクセスするデバイス
-        :type word_list: List[(const.DeviceCode2, int, bytes)]
+        :type word_list: List[(const.DeviceCode, int, bytes)]
         :param dword_list: ダブルワード単位でアクセスするデバイス
-        :type dword_list: List[(const.DeviceCode2, int, bytes)]
+        :type dword_list: List[(const.DeviceCode, int, bytes)]
         :param int timeout: タイムアウト、250msec単位
         :return: None
         """
@@ -572,9 +572,9 @@ class SLMPClient(object):
         """モニタするデバイスの登録
 
         :param word_list: ワード単位でアクセスするデバイスのリスト
-        :type word_list: List[(const.DeviceCode2, int)]
+        :type word_list: List[(const.DeviceCode, int)]
         :param dword_list: ダブルワード単位でアクセスするデバイスのリスト
-        :type dword_list: List[(const.DeviceCode2, int)]
+        :type dword_list: List[(const.DeviceCode, int)]
         :param int timeout: タイムアウト、250msec単位
         :return: None
         """
@@ -637,10 +637,10 @@ class SLMPClient(object):
 
         :param word_list: ワード単位でアクセスするデバイスブロックのリスト
         (デバイスコード, アドレス, 点数)
-        :type word_list: List[(const.DeviceCode2, int, int)]
+        :type word_list: List[(const.DeviceCode, int, int)]
         :param bit_list: ビット単位でアクセスするデバイスブロックのリスト
         (デバイスコード, アドレス, 点数)
-        :type bit_list: List[(const.DeviceCode2, int, int)]
+        :type bit_list: List[(const.DeviceCode, int, int)]
         :param int timeout: タイムアウト、250msec単位
         :return: デバイスに入っていたデータ(ワードアクセス分のリスト,
          ビットアクセス分のリスト)
@@ -703,10 +703,10 @@ class SLMPClient(object):
 
         :param word_list: ワードアクセスするデバイスと書き込むデータのリスト
         (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
-        :type word_list: List[(const.DeviceCode2, int, int, List[int])]
+        :type word_list: List[(const.DeviceCode, int, int, List[int])]
         :param bit_list: ビットアクセスするデバイスと書き込むデータのリスト
         (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
-        :type bit_list: List[(const.DeviceCode2, int, int, List[bool])]
+        :type bit_list: List[(const.DeviceCode, int, int, List[bool])]
         :param int timeout: タイムアウト、250msec単位
         :return: None
         """
