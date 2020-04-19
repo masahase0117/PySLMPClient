@@ -336,5 +336,9 @@ class SLMPError(Exception):
 
 
 class SLMPCommunicationError(SLMPError):
-    def __init__(self, cause: EndCode):
+    def __init__(self, cause):
+        """通信エラー
+
+        :param EndCode cause: SLMPで通信先より報告されるエラー
+        """
         self.cause = cause

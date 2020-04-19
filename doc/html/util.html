@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyslmpclient.util &#8212; PySLMPClient  ドキュメント</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="prev" title="pyslmpclient.const" href="const.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="const.html" title="pyslmpclient.const"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PySLMPClient  ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyslmpclient.util">
+<span id="pyslmpclient-util"></span><h1>pyslmpclient.util<a class="headerlink" href="#module-pyslmpclient.util" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="function">
+<dt id="pyslmpclient.util.encode_bcd">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">encode_bcd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.encode_bcd" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Encode 4bit BCD array</p>
+<dl class="simple">
+<dt>[1,2,3,4,...] --&gt; [0x12,0x34,...]</dt><dd><p>入力が奇数個の場合は最後の4bitを0埋め</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- エンコード対象</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>4bit毎にパックされた結果</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.decode_bcd">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">decode_bcd</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.decode_bcd" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Decode 4bit BCD array</p>
+<p>[0x12,0x34,...] --&gt; [1,2,3,4,...]</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- 4bitにパックされたデータ列</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.unpack_bits">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">unpack_bits</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.unpack_bits" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>LSBから順に格納されているビット列を配列に展開する</p>
+<dl class="simple">
+<dt>[&lt;M107 ... M100&gt;, &lt;M115 ... M108&gt;] --&gt;</dt><dd><p>[&lt;M100&gt;, ... ,&lt;M107&gt;, &lt;M108&gt;, ... ,&lt;M115&gt;]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- パック済みのデータ列</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>1項目１デバイスとした配列</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.pack_bits">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">pack_bits</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.pack_bits" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ビットデータの配列をLSBから順に格納されたバイト列にパックする</p>
+<dl class="simple">
+<dt>[&lt;M100&gt;, ... ,&lt;M107&gt;, &lt;M108&gt;, ... ,&lt;M115&gt;]  --&gt;</dt><dd><p>[&lt;M107 ... M100&gt;, &lt;M115 ... M108&gt;]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- デバイスごとのビットデータの配列</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>パックした配列</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.device2ascii">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">device2ascii</code><span class="sig-paren">(</span><em class="sig-param">device_type</em>, <em class="sig-param">address</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.device2ascii" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ASCII形式時のデバイス表記へ変換する</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_type</strong> (<em>DeviceCode2</em>) -- デバイス種別</p></li>
+<li><p><strong>address</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- アドレス</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>ASCII形式時のデバイス表記</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyslmpclient.util.Target">
+<em class="property">class </em><code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">Target</code><span class="sig-paren">(</span><em class="sig-param">network_num=0</em>, <em class="sig-param">node_num=0</em>, <em class="sig-param">dst_proc_num=0</em>, <em class="sig-param">m_drop_num=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.Target" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SLMPで通信する対象</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- ネットワーク番号</p></li>
+<li><p><strong>node_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 要求先局番</p></li>
+<li><p><strong>dst_proc_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 要求先プロセッサ番号</p></li>
+<li><p><strong>m_drop_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 要求先マルチドロップ局番</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pyslmpclient.util.Target.network">
+<em class="property">property </em><code class="sig-name descname">network</code><a class="headerlink" href="#pyslmpclient.util.Target.network" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.util.Target.node">
+<em class="property">property </em><code class="sig-name descname">node</code><a class="headerlink" href="#pyslmpclient.util.Target.node" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.util.Target.dst_proc">
+<em class="property">property </em><code class="sig-name descname">dst_proc</code><a class="headerlink" href="#pyslmpclient.util.Target.dst_proc" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.util.Target.m_drop">
+<em class="property">property </em><code class="sig-name descname">m_drop</code><a class="headerlink" href="#pyslmpclient.util.Target.m_drop" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.make_binary_frame">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">make_binary_frame</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">target</em>, <em class="sig-param">timeout</em>, <em class="sig-param">cmd</em>, <em class="sig-param">sub_cmd</em>, <em class="sig-param">data</em>, <em class="sig-param">ver</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.make_binary_frame" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>バイナリモードの場合のコマンドフレームを作成する</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- シリアル番号</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#pyslmpclient.util.Target" title="pyslmpclient.util.Target"><em>Target</em></a>) -- 接続先</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 監視タイマ 250msec単位</p></li>
+<li><p><strong>cmd</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.SLMPCommand" title="pyslmpclient.const.SLMPCommand"><em>SLMPCommand</em></a>) -- コマンド</p></li>
+<li><p><strong>sub_cmd</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- サブコマンド</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) -- データ</p></li>
+<li><p><strong>ver</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 生成するのは4Eなのか3E</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>コマンドフレーム</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.make_ascii_frame">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">make_ascii_frame</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">target</em>, <em class="sig-param">timeout</em>, <em class="sig-param">cmd</em>, <em class="sig-param">sub_cmd</em>, <em class="sig-param">data</em>, <em class="sig-param">ver</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.make_ascii_frame" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ASCIIモードの場合のコマンドフレームを作成する</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- シリアル番号</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#pyslmpclient.util.Target" title="pyslmpclient.util.Target"><em>Target</em></a>) -- 接続先</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 監視タイマ 250msec単位</p></li>
+<li><p><strong>cmd</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.SLMPCommand" title="pyslmpclient.const.SLMPCommand"><em>SLMPCommand</em></a>) -- コマンド</p></li>
+<li><p><strong>sub_cmd</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- サブコマンド</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) -- データ</p></li>
+<li><p><strong>ver</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 生成するのは4Eなのか3E</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>コマンドフレーム</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.str2bytes_buf">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">str2bytes_buf</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.str2bytes_buf" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>2バイトの16進数が連続した文字列表現から数列へ</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- 16進表現の連なった文字列</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>バイト列</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytearray" title="(in Python v3.8)">bytearray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyslmpclient.util.extracts_word_dword_data">
+<code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">extracts_word_dword_data</code><span class="sig-paren">(</span><em class="sig-param">buf</em>, <em class="sig-param">split_pos</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.extracts_word_dword_data" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>2バイトデータ列と4バイトデータ列を切り分ける</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) -- 切り分け元のバイナリデータ</p></li>
+<li><p><strong>split_pos</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 2バイトデータの数</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>2バイトデータ列と4バイトデータ列</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>], List[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyslmpclient.util.SLMPError">
+<em class="property">exception </em><code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">SLMPError</code><a class="headerlink" href="#pyslmpclient.util.SLMPError" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="pyslmpclient.util.SLMPCommunicationError">
+<em class="property">exception </em><code class="sig-prename descclassname">pyslmpclient.util.</code><code class="sig-name descname">SLMPCommunicationError</code><span class="sig-paren">(</span><em class="sig-param">cause</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.util.SLMPCommunicationError" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>通信エラー</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>cause</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.EndCode" title="pyslmpclient.const.EndCode"><em>EndCode</em></a>) -- SLMPで通信先より報告されるエラー</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="const.html"
+                        title="前の章へ">pyslmpclient.const</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/util.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="const.html" title="pyslmpclient.const"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PySLMPClient  ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, MASA.H.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 で生成しました。
+    </div>
+  </body>
+</html>

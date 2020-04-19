@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyslmpclient &#8212; PySLMPClient  ドキュメント</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="pyslmpclient.const" href="const.html" />
+    <link rel="prev" title="Welcome to PySLMPClient&#39;s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="const.html" title="pyslmpclient.const"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PySLMPClient&#39;s documentation!"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PySLMPClient  ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyslmpclient">
+<span id="pyslmpclient"></span><h1>pyslmpclient<a class="headerlink" href="#module-pyslmpclient" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="data">
+<dt id="pyslmpclient.VERSION">
+<code class="sig-prename descclassname">pyslmpclient.</code><code class="sig-name descname">VERSION</code><em class="property"> = '0.0.1'</em><a class="headerlink" href="#pyslmpclient.VERSION" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>バージョン表記(major.minor.serial)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyslmpclient.SLMPClient">
+<em class="property">class </em><code class="sig-prename descclassname">pyslmpclient.</code><code class="sig-name descname">SLMPClient</code><span class="sig-paren">(</span><em class="sig-param">addr</em>, <em class="sig-param">port=5000</em>, <em class="sig-param">binary=True</em>, <em class="sig-param">ver=4</em>, <em class="sig-param">tcp=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SLMPによりPLCとやり取りする</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- 接続するPLCのIPアドレス</p></li>
+<li><p><strong>port</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 接続先のポート番号</p></li>
+<li><p><strong>binary</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- 交信コードとしてバイナリを使用するかどうか</p></li>
+<li><p><strong>ver</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- <p>使用するフレームのバージョン 4 or 3</p>
+<p>CC-Link IE側の用語で行くと4EフレームがMT型、3EフレームがST型</p>
+</p></li>
+<li><p><strong>tcp</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- TCPで通信するかどうか</p></li>
+</ul>
+</dd>
+</dl>
+<p>コンテキストマネージャに対応しているので
+<a class="reference internal" href="#pyslmpclient.SLMPClient.open" title="pyslmpclient.SLMPClient.open"><code class="xref py py-meth docutils literal notranslate"><span class="pre">open()</span></code></a> / <a class="reference internal" href="#pyslmpclient.SLMPClient.close" title="pyslmpclient.SLMPClient.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code></a> の代わりに
+<a class="reference external" href="https://docs.python.org/ja/3/reference/compound_stmts.html#with" title="(in Python v3.8)"><span>with 文</span></a> が使用できる。</p>
+<dl class="attribute">
+<dt id="pyslmpclient.SLMPClient.target">
+<code class="sig-name descname">target</code><em class="property"> = None</em><a class="headerlink" href="#pyslmpclient.SLMPClient.target" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>通信対象(接続先と通信対象は別個に指定する)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="util.html#pyslmpclient.util.Target" title="pyslmpclient.util.Target"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyslmpclient.util.Target</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyslmpclient.SLMPClient.logger">
+<code class="sig-name descname">logger</code><em class="property"> = None</em><a class="headerlink" href="#pyslmpclient.SLMPClient.logger" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>モジュールで使用するロガー</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/logging.html#logging.Logger" title="(in Python v3.8)">logging.Logger</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.open" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>通信の開始</p>
+<p>必ず <a class="reference internal" href="#pyslmpclient.SLMPClient.close" title="pyslmpclient.SLMPClient.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code></a> とセットで使用する</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.close" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>通信終了</p>
+<p>必ず <a class="reference internal" href="#pyslmpclient.SLMPClient.open" title="pyslmpclient.SLMPClient.open"><code class="xref py py-meth docutils literal notranslate"><span class="pre">open()</span></code></a> とセットで使用する</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.read_bit_devices">
+<code class="sig-name descname">read_bit_devices</code><span class="sig-paren">(</span><em class="sig-param">device_code</em>, <em class="sig-param">start_num</em>, <em class="sig-param">count</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.read_bit_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>デバイスコードで指定したビットデバイスを開始アドレスから指定の個数分だけ読み取る。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_code</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a>) -- デバイスコード</p></li>
+<li><p><strong>start_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 開始アドレス</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 個数</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 監視時間, 250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>デバイスの値</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)">bool</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.read_word_devices">
+<code class="sig-name descname">read_word_devices</code><span class="sig-paren">(</span><em class="sig-param">device_code</em>, <em class="sig-param">start_num</em>, <em class="sig-param">count</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.read_word_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>デバイスコードで指定したワードデバイスを開始アドレスから指定の個数分だけ読み取る。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_code</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a>) -- デバイスコード</p></li>
+<li><p><strong>start_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 開始アドレス</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 個数</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 監視時間, 250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>デバイスの値</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.write_bit_devices">
+<code class="sig-name descname">write_bit_devices</code><span class="sig-paren">(</span><em class="sig-param">dc2</em>, <em class="sig-param">start_num</em>, <em class="sig-param">data</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.write_bit_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>デバイスコードで指定したビットデバイスを開始アドレスから指定したデータで書き換える。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dc2</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a>) -- デバイスコード</p></li>
+<li><p><strong>start_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 開始アドレス</p></li>
+<li><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- 書き込むデータ</p></li>
+<li><p><strong>timeout</strong> -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.write_word_devices">
+<code class="sig-name descname">write_word_devices</code><span class="sig-paren">(</span><em class="sig-param">dc2</em>, <em class="sig-param">start_num</em>, <em class="sig-param">data</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.write_word_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>デバイスコードで指定したワードデバイスを開始アドレスから指定したデータで書き換える。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dc2</strong> (<a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a>) -- デバイスコード</p></li>
+<li><p><strong>start_num</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 開始アドレス</p></li>
+<li><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- 書き込むデータ</p></li>
+<li><p><strong>timeout</strong> -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.read_random_devices">
+<code class="sig-name descname">read_random_devices</code><span class="sig-paren">(</span><em class="sig-param">word_list</em>, <em class="sig-param">dword_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.read_random_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>指定した連続していないデバイスのデータを読む</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ワードアクセスするデバイスのリスト</p></li>
+<li><p><strong>dword_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ダブルワードアクセスするデバイスのリスト</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>デバイスに入っていたデータ(ワードアクセス分のリスト,
+ダブルワードアクセス分のリスト)</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>(List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>], List[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.write_random_bit_devices">
+<code class="sig-name descname">write_random_bit_devices</code><span class="sig-paren">(</span><em class="sig-param">device_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.write_random_bit_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>連続していないビットデバイスに書き込む</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>)</em><em>]</em>) -- 書き込むデバイスと値のリスト(デバイス種別、アドレス、値)</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.write_random_word_devices">
+<code class="sig-name descname">write_random_word_devices</code><span class="sig-paren">(</span><em class="sig-param">word_list</em>, <em class="sig-param">dword_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.write_random_word_devices" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>連続していないワードデバイスに書き込む</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a><em>)</em><em>]</em>) -- ワード単位でアクセスするデバイス</p></li>
+<li><p><strong>dword_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a><em>)</em><em>]</em>) -- ダブルワード単位でアクセスするデバイス</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.entry_monitor_device">
+<code class="sig-name descname">entry_monitor_device</code><span class="sig-paren">(</span><em class="sig-param">word_list</em>, <em class="sig-param">dword_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.entry_monitor_device" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>モニタするデバイスの登録</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ワード単位でアクセスするデバイスのリスト</p></li>
+<li><p><strong>dword_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ダブルワード単位でアクセスするデバイスのリスト</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.execute_monitor">
+<code class="sig-name descname">execute_monitor</code><span class="sig-paren">(</span><em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.execute_monitor" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>モニタ登録したデバイスのデータを読み取る</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>デバイスに入っていたデータ(ワードアクセス分のリスト,
+ダブルワードアクセス分のリスト)</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>(List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>], List[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.read_block">
+<code class="sig-name descname">read_block</code><span class="sig-paren">(</span><em class="sig-param">word_list</em>, <em class="sig-param">bit_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.read_block" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ブロックで読み出す</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ワード単位でアクセスするデバイスブロックのリスト
+(デバイスコード, アドレス, 点数)</p></li>
+<li><p><strong>bit_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>)</em><em>]</em>) -- ビット単位でアクセスするデバイスブロックのリスト
+(デバイスコード, アドレス, 点数)</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>デバイスに入っていたデータ(ワードアクセス分のリスト,
+ビットアクセス分のリスト)</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>(List[List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)">int</a>]], List[List[<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)">bool</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.write_block">
+<code class="sig-name descname">write_block</code><span class="sig-paren">(</span><em class="sig-param">word_list</em>, <em class="sig-param">bit_list</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.write_block" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ブロックでの書き込み</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>)</em><em>]</em>) -- ワードアクセスするデバイスと書き込むデータのリスト
+(デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)</p></li>
+<li><p><strong>bit_list</strong> (<em>List</em><em>[</em><em>(</em><a class="reference internal" href="const.html#pyslmpclient.const.DeviceCode" title="pyslmpclient.const.DeviceCode"><em>const.DeviceCode</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em><em>)</em><em>]</em>) -- ビットアクセスするデバイスと書き込むデータのリスト
+(デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.read_type_name">
+<code class="sig-name descname">read_type_name</code><span class="sig-paren">(</span><em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.read_type_name" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>アクセス先のユニットの形名および形名コードを読み出す</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>(形名, 形名コード)</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, <a class="reference internal" href="const.html#pyslmpclient.const.TypeCode" title="pyslmpclient.const.TypeCode">const.TypeCode</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.self_test">
+<code class="sig-name descname">self_test</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.self_test" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>通信が正常に行えているかテストする</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- 通信テストで送る文字列、16進表現[0-9][A-F]のみ</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>正常に通信できているかどうか</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.clear_error">
+<code class="sig-name descname">clear_error</code><span class="sig-paren">(</span><em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.clear_error" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>エラーをクリア</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.check_on_demand_data">
+<code class="sig-name descname">check_on_demand_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.check_on_demand_data" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>オンデマンド送信データを受け取っていないか確認する</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値</dt>
+<dd class="field-odd"><p>受信していた場合そのデータ、受信していない場合はNone</p>
+</dd>
+<dt class="field-even">戻り値の型</dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.memory_read">
+<code class="sig-name descname">memory_read</code><span class="sig-paren">(</span><em class="sig-param">addr</em>, <em class="sig-param">length</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.memory_read" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>自局のメモリを読み取る</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 先頭アドレス</p></li>
+<li><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- ワード長</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>読みだしたデータ</p>
+</dd>
+<dt class="field-odd">戻り値の型</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyslmpclient.SLMPClient.memory_write">
+<code class="sig-name descname">memory_write</code><span class="sig-paren">(</span><em class="sig-param">addr</em>, <em class="sig-param">data</em>, <em class="sig-param">timeout=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyslmpclient.SLMPClient.memory_write" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>自局のメモリに書き込む</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- 先頭アドレス</p></li>
+<li><p><strong>data</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/ja/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a><em>]</em>) -- 書き込みデータ</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/ja/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- タイムアウト、250msec単位</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="index.html"
+                        title="前の章へ">Welcome to PySLMPClient's documentation!</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="const.html"
+                        title="次の章へ">pyslmpclient.const</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pyslmpclient.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="const.html" title="pyslmpclient.const"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PySLMPClient&#39;s documentation!"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PySLMPClient  ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, MASA.H.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 で生成しました。
+    </div>
+  </body>
+</html>

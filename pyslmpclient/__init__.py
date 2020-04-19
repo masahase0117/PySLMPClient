@@ -15,6 +15,7 @@ from pyslmpclient import const
 from pyslmpclient import util
 
 VERSION = "0.0.1"
+"""バージョン表記(major.minor.serial)"""
 
 
 class SLMPClient(object):
@@ -25,29 +26,55 @@ class SLMPClient(object):
         :param int port: 接続先のポート番号
         :param bool binary: 交信コードとしてバイナリを使用するかどうか
         :param int ver: 使用するフレームのバージョン 4 or 3
+
+            CC-Link IE側の用語で行くと4EフレームがMT型、3EフレームがST型
         :param bool tcp: TCPで通信するかどうか
+
+        コンテキストマネージャに対応しているので
+        :meth:`open` / :meth:`close` の代わりに
+        :ref:`python:with` が使用できる。
         """
         assert 0 < port, port
-        self.addr = (addr, port)
+        self.__addr = (addr, port)
+        """IPアドレス, ポート番号
+        
+        このまま :py:func:`socket.socket` の引数になる
+        
+         :type: str, int"""
         assert ver in (3, 4), ver
-        self.protocol = (binary, ver, tcp)
+        self.__protocol = (binary, ver, tcp)
+        """バイナリ, フレームバージョン, TCP
+        
+        :type: bool, int, bool"""
         self.__socket = None  # type: Optional[socket.socket]
         self.__seq = 0  # type: int
+        """コマンドに付加するシーケンス番号
+        
+         :type: int"""
         self.__recv_queue = (
             dict()
         )  # type: Dict[int, (int, int, int, int, int, bytes)]
         self.__lock = threading.Lock()
         self.target = util.Target()
+        """通信対象(接続先と通信対象は別個に指定する)
+        
+        :type: :class:`pyslmpclient.util.Target`"""
         self.__rest = b""
         self.logger = logging.getLogger(__name__).getChild(
             self.__class__.__name__
         )
+        """モジュールで使用するロガー
+        
+        :type: logging.Logger"""
 
         self.__recv_thread = threading.Thread(
             target=self.__worker, daemon=True
         )
         self.__ctx_cnt = 0
         self.__monitor_device_num = (0, 0)  # type: (int, int)
+        """モニタデバイスの内訳(ワードデバイス, ダブルワードデバイス)
+        
+        :vartype: int, int"""
 
     def __worker(self):
         while self.__socket:
@@ -57,6 +84,9 @@ class SLMPClient(object):
                 self.logger.error(e)
 
     def open(self):
+        """通信の開始
+
+        必ず :meth:`close` とセットで使用する"""
         with self.__lock:
             self.__ctx_cnt += 1
         if self.__socket:
@@ -64,7 +94,7 @@ class SLMPClient(object):
         with self.__lock:
             if self.__socket:
                 return
-            if self.protocol[2]:
+            if self.__protocol[2]:
                 self.__socket = socket.socket(
                     socket.AF_INET, socket.SOCK_STREAM
                 )
@@ -72,11 +102,14 @@ class SLMPClient(object):
                 self.__socket = socket.socket(
                     socket.AF_INET, socket.SOCK_DGRAM
                 )
-            self.__socket.connect(self.addr)
+            self.__socket.connect(self.__addr)
             self.__socket.settimeout(1)
             self.__recv_thread.start()
 
     def close(self):
+        """通信終了
+
+        必ず :meth:`open` とセットで使用する"""
         with self.__lock:
             self.__ctx_cnt -= 1
         if self.__socket and self.__ctx_cnt == 0:
@@ -106,7 +139,7 @@ class SLMPClient(object):
                 self.__seq = 0
         if not isinstance(cmd, const.SLMPCommand):
             raise ValueError(cmd)
-        if self.protocol[0]:  # バイナリ
+        if self.__protocol[0]:  # バイナリ
             make_frame = util.make_binary_frame
         else:  # ASCII
             make_frame = util.make_ascii_frame
@@ -118,16 +151,16 @@ class SLMPClient(object):
                 cmd,
                 sub_cmd,
                 data,
-                self.protocol[1],
+                self.__protocol[1],
             )
             self.__socket.sendall(buf)
-            if self.protocol[1] == 4:  # 4Eフレーム
+            if self.__protocol[1] == 4:  # 4Eフレーム
                 self.__seq += 1
                 return self.__seq - 1
-            elif self.protocol[1] == 3:  # 3Eフレーム
+            elif self.__protocol[1] == 3:  # 3Eフレーム
                 return 0
             else:
-                raise RuntimeError(self.protocol[1])
+                raise RuntimeError(self.__protocol[1])
 
     def __recv(self):
         if not self.__socket:
@@ -268,7 +301,7 @@ class SLMPClient(object):
             raise ValueError(device_code)
         assert 0 < start_num < 0xFFF, start_num
         assert 0 < count < 3584, count
-        if self.protocol[0]:
+        if self.__protocol[0]:
             cmd_text = struct.pack("<I", start_num)[:-1]
             cmd_text += struct.pack("<B", device_code.value)
             cmd_text += struct.pack("<H", count)
@@ -353,7 +386,7 @@ class SLMPClient(object):
         if not isinstance(dc2, const.DeviceCode):
             raise ValueError(dc2)
         assert 0 < start_num < 0xFFF, start_num
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<I", start_num)[:-1]
             buf += struct.pack("<BH", dc2.value, len(data))
             if sub_cmd & 0x01:  # ビット
@@ -402,7 +435,7 @@ class SLMPClient(object):
         :param data: 書き込むデータ
         :type data: List[int]
         :param timeout: タイムアウト、250msec単位
-        :return:
+        :return: None
         """
         self.__write_devices(dc2, start_num, data, timeout, 0x01)
 
@@ -415,7 +448,7 @@ class SLMPClient(object):
         :param data: 書き込むデータ
         :type data: List[int]
         :param timeout: タイムアウト、250msec単位
-        :return:
+        :return: None
         """
         self.__write_devices(dc2, start_num, data, timeout, 0x00)
 
@@ -429,7 +462,7 @@ class SLMPClient(object):
         :return: 要求電文の形式となったデバイスリスト
         :rtype: bytes
         """
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<BB", len(word_list), len(dword_list))
             for dc, addr in word_list:
                 buf += struct.pack("<I", addr)[:-1]
@@ -510,7 +543,7 @@ class SLMPClient(object):
         """
         cmd = const.SLMPCommand.Device_WriteRandom
         sub_cmd = 0x01
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<B", len(device_list))
             for v in device_list:
                 buf += struct.pack("<I", v[1])[:-1]
@@ -535,7 +568,7 @@ class SLMPClient(object):
         :param int timeout: タイムアウト、250msec単位
         :return: None
         """
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<BB", len(word_list), len(dword_list))
             for v in word_list:
                 buf += struct.pack("<I", v[1])[:-1]
@@ -637,19 +670,19 @@ class SLMPClient(object):
         """ブロックで読み出す
 
         :param word_list: ワード単位でアクセスするデバイスブロックのリスト
-        (デバイスコード, アドレス, 点数)
+            (デバイスコード, アドレス, 点数)
         :type word_list: List[(const.DeviceCode, int, int)]
         :param bit_list: ビット単位でアクセスするデバイスブロックのリスト
-        (デバイスコード, アドレス, 点数)
+            (デバイスコード, アドレス, 点数)
         :type bit_list: List[(const.DeviceCode, int, int)]
         :param int timeout: タイムアウト、250msec単位
         :return: デバイスに入っていたデータ(ワードアクセス分のリスト,
-         ビットアクセス分のリスト)
+            ビットアクセス分のリスト)
         :rtype: (List[List[int]], List[List[bool])
         """
         cmd = const.SLMPCommand.Device_ReadBlock
         sub_smd = 0x00
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<BB", len(word_list), len(bit_list))
             for dc, addr, num in word_list + bit_list:
                 buf += struct.pack("<I", addr)[:-1]
@@ -703,10 +736,10 @@ class SLMPClient(object):
         """ブロックでの書き込み
 
         :param word_list: ワードアクセスするデバイスと書き込むデータのリスト
-        (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
+            (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
         :type word_list: List[(const.DeviceCode, int, int, List[int])]
         :param bit_list: ビットアクセスするデバイスと書き込むデータのリスト
-        (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
+            (デバイス種別, 先頭アドレス, デバイス点数, 書き込みデータ)
         :type bit_list: List[(const.DeviceCode, int, int, List[bool])]
         :param int timeout: タイムアウト、250msec単位
         :return: None
@@ -715,7 +748,7 @@ class SLMPClient(object):
         sub_cmd = 0x00
         if len(word_list) + len(bit_list) > 120:
             raise RuntimeError("書き込みブロック数超過")
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<BB", len(word_list), len(bit_list))
             for dc, addr, num, w_data in word_list:
                 buf += struct.pack("<I", addr)[:-1]
@@ -768,7 +801,7 @@ class SLMPClient(object):
 
         :param int timeout: タイムアウト、250msec単位
         :return: (形名, 形名コード)
-        :rtype: (string, SLMPTypeCode)
+        :rtype: str, const.TypeCode
         """
         seq = self.__cmd_format(
             timeout, const.SLMPCommand.RemoteControl_ReadTypeName, 0x00, b""
@@ -796,7 +829,7 @@ class SLMPClient(object):
             data = time.strftime("%Y%m%d%H%M%S")
         assert int(data, base=16), data
         assert len(data) < 960, data
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             body = struct.pack("<H", len(data))
         else:
             body = b"%04X" % len(data)
@@ -865,7 +898,7 @@ class SLMPClient(object):
         assert 0 < length <= 480, length
         assert self.target.network == 0, self.target
         assert self.target.node == 0xFF, self.target
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<IH", addr, length)
         else:
             buf = b"%08X%04X" % (addr, length)
@@ -904,14 +937,13 @@ class SLMPClient(object):
         :type data: List[bytes]
         :param int timeout: タイムアウト、250msec単位
         :return: None
-        :rtype: None
         """
         cmd = const.SLMPCommand.Memory_Write
         sub_cmd = 0x00
         assert 0 < len(data) <= 480, len(data)
         assert self.target.network == 0, self.target
         assert self.target.node == 0xFF, self.target
-        if self.protocol[0]:  # Binary
+        if self.__protocol[0]:  # Binary
             buf = struct.pack("<IH", addr, len(data))
             for v in data:
                 buf += v
