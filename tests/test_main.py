@@ -1006,6 +1006,8 @@ class SLMPClientOtherTestCase(SLMPClientTestCase):
 
 
 class SLMPClientMemoryTestCase(SLMPClientTestCase):
+    target_bytes = (b"00FF000101", b"\x00\xff\x01\x00\x01")
+
     def test_read(self):
         for f_type in ("a", "b"):
             with self.subTest(ftype=f_type):
@@ -1021,7 +1023,20 @@ class SLMPClientMemoryTestCase(SLMPClientTestCase):
                         a = self.prepare(
                             i, f_type, data_body, socket_instance_mock
                         )
-                        a.target = self.target
+                        a.target.network = 1
+                        a.target.node = 0x01
+                        a.target.m_drop = 1
+                        a.target.dst_proc = 1
+                        with self.assertRaises(AssertionError):
+                            ret = a.memory_read(0x78, 3, timeout=6)
+                        a.target.network = 0
+                        with self.assertRaises(AssertionError):
+                            ret = a.memory_read(0x78, 3, timeout=6)
+                        a.target.network = 1
+                        a.target.node = 0xFF
+                        with self.assertRaises(AssertionError):
+                            ret = a.memory_read(0x78, 3, timeout=6)
+                        a.target.network = 0
                         with a:
                             ret = a.memory_read(0x78, 3, timeout=6)
                         self.assertListEqual(
@@ -1047,7 +1062,26 @@ class SLMPClientMemoryTestCase(SLMPClientTestCase):
                         a = self.prepare_no_res(
                             f_type, i, socket_instance_mock
                         )
-                        a.target = self.target
+                        a.target.network = 1
+                        a.target.node = 0x01
+                        a.target.m_drop = 1
+                        a.target.dst_proc = 1
+                        with self.assertRaises(AssertionError):
+                            a.memory_write(
+                                0x2680, [b"\x00\x20", b"\x00\x00"], timeout=6
+                            )
+                        a.target.network = 0
+                        with self.assertRaises(AssertionError):
+                            a.memory_write(
+                                0x2680, [b"\x00\x20", b"\x00\x00"], timeout=6
+                            )
+                        a.target.network = 1
+                        a.target.node = 0xFF
+                        with self.assertRaises(AssertionError):
+                            a.memory_write(
+                                0x2680, [b"\x00\x20", b"\x00\x00"], timeout=6
+                            )
+                        a.target.network = 0
                         with a:
                             a.memory_write(
                                 0x2680, [b"\x00\x20", b"\x00\x00"], timeout=6
