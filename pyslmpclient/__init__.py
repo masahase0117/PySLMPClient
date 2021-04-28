@@ -191,7 +191,7 @@ class SLMPClient(object):
             if buf[1] == ord("0"):  # 3E
                 buf = buf[4:]
             elif buf[1] == ord("4"):  # 4E
-                seq = int(buf[4:8].decode("ascii"))
+                seq = int(buf[4:8].decode("ascii"), base=16)
                 buf = buf[12:]
             else:
                 RuntimeError(buf)
